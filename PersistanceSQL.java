@@ -56,20 +56,33 @@ public class PersistanceSQL {
 	    public Object ChargerDepuisBase(String id , String nomClasse){
 	    	Object objet = new Object();
 	        switch(nomClasse){
-		        case "Commande" :     	
+		        case "Produit" :     	
 		        	try
-			        {
+		        	{
 			            Statement stmt = connexion.createStatement();
-			            /*String query = "SELECT * FROM " + nomClasse + " WHERE id =?";
-			            PreparedStatement req = connexion.prepareStatement(query);
-			            req.setString(1,id);
-			            ResultSet rs = req.executeQuery(query);
+			            String query = "SELECT V.Libelle, L.TypeProduit, P.Calibre "
+			            		+ "FROM variete V, livraison L, lotproduction P, verger N "
+			            		+ "WHERE P.NumLot ="+id+" "
+			            		+ "AND P.CodeLiv = L.CodeLiv"
+			            		+ "AND L.CodeVerger = N.CodeVerger"
+			            		+ "AND N.LibelleVar = V.Libelle";
+			            ResultSet rs = stmt.executeQuery(query);
+			            
+			            String variete = "";
+			            String typeProduit = "";
+			            int calibre = 0;
+			            
 			            while(rs.next())
 			            {
-			                
-			            }*/
+			            	variete = rs.getString("V.Libelle");
+			            	typeProduit = rs.getString("L.TypeProduit");
+			            	calibre = rs.getInt("P.Calibre");
+			            }
 			            
-			            //Cast du type d'objet dans objet
+			            if(calibre !=0){
+			            	Produit leProduit = new Produit(variete,typeProduit,calibre);
+			            	objet = leProduit;
+			            }
 			        }
 			        catch(SQLException e)
 			        {
@@ -89,7 +102,7 @@ public class PersistanceSQL {
 			        }
 	        	case "Distributeur" :
 	        	
-	        	case "Produit" :
+	        	case "Commande" :
 	        		
 	        }	
 	    	
