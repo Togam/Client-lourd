@@ -1,4 +1,5 @@
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 public class Commande {
@@ -10,8 +11,9 @@ public class Commande {
 	private int qte;
 	private Date dateEnvoi = null, dateConditionnement;
 	
-	public Commande(int unId, Produit unProd, float unPrix, String unCond, int uneQte, Date uneDateE, Date uneDateC ){
+	public Commande(int unId, Produit unProd, float unPrix, String unCond, int uneQte, Date uneDateE, Date uneDateC){
 		this.id = unId;
+		this.leProduit = unProd;
 		this.prixHT = unPrix;
 		this.conditionnement = unCond;
 		this.qte = uneQte;
@@ -57,7 +59,7 @@ public class Commande {
 		xml += "calibre =\"" + leProduit.getCalibre()+ "\"/>";
 		xml += "<conditionnement type=\""  + this.conditionnement + "\"/>";
 		xml += "<quantite>" + this.qte + "</quantite>";
-		xml += "<date_conditionnement>" + this.dateConditionnement + "</date_conditionnement>";
+		xml += "<date_conditionnement>" + this.dateConditionnement+ "</date_conditionnement>";
 		xml += "<date_envoi>" + this.dateEnvoi + "</date_envoi>";
 		xml += "</commande>";
 		
