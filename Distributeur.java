@@ -6,10 +6,11 @@ public class Distributeur {
 	private String id, nom;
 	private ArrayList<Commande> lesCommandes;
 	
-	public Distributeur(String unId, String unNom){
+	public Distributeur(String unId, String unNom, ArrayList<Commande> UneListeCommandes){
 		this.id = unId;
 		this.nom = unNom;
 		this.lesCommandes = new ArrayList<Commande>();
+		this.lesCommandes = UneListeCommandes;
 	}
 	
 	public String getId(){
