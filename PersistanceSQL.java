@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.*;
+
 
 public class PersistanceSQL {
 	
@@ -16,26 +18,133 @@ public class PersistanceSQL {
 	    private int port ;
 	    private Connection connexion ;
 	    
+	public PersistanceSQL(){
+	    	
+	}
+	
 	 public PersistanceSQL(String ipBase , int port , String nomBaseDonne){
 	     this.ipBase = ipBase ;
 	     this.port = port ; 
 	     this.nomBaseDonne = nomBaseDonne;
 	 }
 	
-	   public void RangerDansBase(){
+	   public void RangerDansBase(Object unObjet){
+		   
+		   if(unObjet.getClass().toString() == "Produit"){
+			   String variete = ((Produit)unObjet).getVariete();
+			   String type = ((Produit)unObjet).getType();
+			   int calibre = ((Produit)unObjet).getCalibre();
+			   
+			   try  {
+		        	Class.forName("org.gjt.mm.mysql.Driver");
+		   	    	connexion = DriverManager.getConnection("jdbc:mysql://" + ipBase + ":" +port + "/" + nomBaseDonne ,"root","");  	
+		   	     }
+		   	     catch(SQLException e) {
+		   	        System.out.println("SQL error : " + e.getMessage());
+		   	     }
+		   	     catch(ClassNotFoundException e){
+		   	        System.out.println("Class not found : " + e.getMessage());
+		   	     }
+			   
+			   try{
+				   Statement stmt1 = connexion.createStatement();
+				   String query1 = "INSERT INTO lotproduction ('variete', 'type', 'Calibre') VALUES ('"+variete+"', '"+type+"', '"+calibre+"')";
+				   ResultSet rs1 = stmt1.executeQuery(query1);
+				   rs1.insertRow();
+			   }
+			   catch(SQLException e)
+		        {
+		            System.out.println("SQL error : " + e.getMessage());
+		        }
+	        	catch(java.lang.NullPointerException e){
+	        		System.out.println("NullPointerException error : " + e.getMessage());
+	        	}
+		   }
+		   
+		   if(unObjet.getClass().toString() == "Commande"){
+			   String id = ((Commande)unObjet).getId();
+			   Produit LeProd = ((Commande)unObjet).getProduit();
+			   double prixHT = ((Commande)unObjet).getPrixHT();
+			   String conditionnement = ((Commande)unObjet).getConditionnement();
+			   int qte = ((Commande)unObjet).getQte();
+			   Date envoie = (Date) ((Commande)unObjet).getDateEnvoi();
+			   Date cond = (Date) ((Commande)unObjet).getDateConditionnement();
+			   
+			   try  {
+		        	Class.forName("org.gjt.mm.mysql.Driver");
+		   	    	connexion = DriverManager.getConnection("jdbc:mysql://" + ipBase + ":" +port + "/" + nomBaseDonne ,"root","");  	
+		   	     }
+		   	     catch(SQLException e) {
+		   	        System.out.println("SQL error : " + e.getMessage());
+		   	     }
+		   	     catch(ClassNotFoundException e){
+		   	        System.out.println("Class not found : " + e.getMessage());
+		   	     }
+		   }
+		   
+		   if(unObjet.getClass().toString() == "Distributeur"){
+			   String id = ((Distributeur)unObjet).getId();
+			   String nom = ((Distributeur)unObjet).getNom();
+			   ArrayList<Commande> LesCommandes = new ArrayList<Commande>();
+			   LesCommandes = ((Distributeur)unObjet).getCommandes();
+			   
+			   try  {
+		        	Class.forName("org.gjt.mm.mysql.Driver");
+		   	    	connexion = DriverManager.getConnection("jdbc:mysql://" + ipBase + ":" +port + "/" + nomBaseDonne ,"root","");  	
+		   	     }
+		   	     catch(SQLException e) {
+		   	        System.out.println("SQL error : " + e.getMessage());
+		   	     }
+		   	     catch(ClassNotFoundException e){
+		   	        System.out.println("Class not found : " + e.getMessage());
+		   	     }
+		   }
+
+	    }
+	
+	   public Object ChargerDepuisBase(String id, String nomClasse) throws SQLException{
+	    	Object res = null;
 	        try
 	        {
 	            Statement stmt = connexion.createStatement();
-	            ResultSet rs = stmt.executeQuery("");
-	            // A COMPLETER
+	            ResultSet result ;
+	            String query = "SELECT * FROM " + nomClasse + " WHERE id= \""+id+"\"";
+	            PreparedStatement req = connexion.prepareStatement(query);
+	            result = req.executeQuery(query);
+	            while(result.next())
+	            {	
+	                if (nomClasse.equals("Distributeur")) {
+	                	String nom = result.getString("nomDistributeur");
+	                	res = new Distributeur(id, nom);
+	                }
+	                if (nomClasse.equals("Commande")){
+	                	String idproduit = result.getString("idProduit");
+	                	Double prix = result.getDouble("prixHt");
+	                	String conditionnement = result.getString("conditionnement");
+	                	int qte = result.getInt("quantite");
+	                	Date dateCondi = result.getDate("dateConditionnement");
+	                	Date dateEnvoi = result.getDate("dateEnvoi");
+	                	Object O = this.ChargerDepuisBase(idproduit, "Produit");
+	                	Produit produit = (Produit)O;
+	                	String idDistrib = result.getString("idDistributeur");
+	                	res = new Commande(id, produit, prix, conditionnement, qte, dateCondi, dateEnvoi, idDistrib);                	
+	                }
+	                if (nomClasse.equals("Produit")){
+		                String variete = result.getString("varieteProduit");
+		                String type = result.getString("typeProduit");
+		                int calibre = result.getInt("calibreProduit");
+		            }
+	            }
+	            return res;
 	        }
 	        catch(SQLException e)
 	        {
 	            System.out.println("SQL error : " + e.getMessage());
+	            return null;
 	        }
-	    }
-	
-	    public Object ChargerDepuisBase(String id , String nomClasse){
+	   }
+	   
+/*    public Object ChargerDepuisBase(String id , String nomClasse){
 	    	Object objet = new Object();
 
 		    	switch(nomClasse){
@@ -393,7 +502,7 @@ public class PersistanceSQL {
 	        
 	    	
 			return objet;
-	    }    
+	    }   */ 
 	     
 	        
 }

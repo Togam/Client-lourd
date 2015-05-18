@@ -1,10 +1,11 @@
 
 public class Produit {
 
-	private String variete, type;
+	private String variete, type, id;
 	private int calibre;
 	
-	public Produit(String uneVar, String unType, int unCalibre){
+	public Produit(String id,String uneVar, String unType, int unCalibre){
+		this.id = id;
 		this.variete = uneVar;
 		this.type = unType;
 		this.calibre = unCalibre;

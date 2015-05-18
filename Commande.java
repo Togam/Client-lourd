@@ -4,31 +4,34 @@ import java.text.SimpleDateFormat;
 
 public class Commande {
 
-	private int id;
+	private String id;
 	private Produit leProduit;
-	private float prixHT;
+	private double prixHT;
 	private String conditionnement;
 	private int qte;
 	private Date dateEnvoi = null, dateConditionnement;
+	String idDistributeur;
 	
-	public Commande(int unId, Produit unProd, float unPrix, String unCond, int uneQte, Date uneDateE, Date uneDateC){
-		this.id = unId;
-		this.leProduit = unProd;
-		this.prixHT = unPrix;
-		this.conditionnement = unCond;
-		this.qte = uneQte;
-		this.dateConditionnement = uneDateC;
-		this.dateEnvoi = uneDateE;
-	}
+	public Commande(String id, Produit unProd, double prix, String conditionnement , int quantite , Date dateEnvoi,Date dateConditionnement, String idDistrib){
+        this.id =id;
+        this.prixHT = prix;
+        this.conditionnement = conditionnement ;
+        this.qte = quantite ;
+        this.dateConditionnement = dateConditionnement ;
+        this.dateEnvoi = dateEnvoi;
+        this.idDistributeur = idDistrib;
+        this.leProduit = unProd;
+        
+    }
 	
-	public int getId(){
+	public String getId(){
 		return this.id;
 	}
 	public Produit getProduit(){ 
 		return this.leProduit;
 	}
 	
-	public float getPrixHT(){
+	public double getPrixHT(){
 		return this.prixHT;
 	}
 	public String getConditionnement(){

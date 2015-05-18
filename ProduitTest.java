@@ -11,8 +11,8 @@ public class ProduitTest {
 	
 	@Test
 	public void testGetVariete() {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		assertEquals("var1",p1.getVariete());
 		assertNotEquals("var2",p1.getVariete());
 		assertEquals("var2",p2.getVariete());
@@ -21,8 +21,8 @@ public class ProduitTest {
 	
 	@Test
 	public void testGetType() {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		assertEquals("type1",p1.getType());
 		assertNotEquals("type2",p1.getType());
 		assertEquals("type2",p2.getType());
@@ -31,8 +31,8 @@ public class ProduitTest {
 	
 	@Test
 	public void testGetCalibre() {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		assertEquals(1,p1.getCalibre());
 		assertNotEquals(2,p1.getCalibre());
 		assertEquals(2,p2.getCalibre());

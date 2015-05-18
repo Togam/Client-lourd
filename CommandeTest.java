@@ -16,33 +16,33 @@ public class CommandeTest {
 
 	@Test
 	public void testGetId() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 				
-		assertEquals(1,c1.getId());
-		assertNotEquals(2,c1.getId());
-		assertEquals(2,c2.getId());
-		assertNotEquals(3,c2.getId());
+		assertEquals("1",c1.getId());
+		assertNotEquals("2",c1.getId());
+		assertEquals("2",c2.getId());
+		assertNotEquals("3",c2.getId());
 	}
 
 	@Test
 	public void testGetProduit() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 				
 		assertEquals(p1,c1.getProduit());
 		assertNotEquals(p2,c1.getProduit());
@@ -52,15 +52,15 @@ public class CommandeTest {
 
 	@Test
 	public void testGetPrixHT() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 		
 		assertEquals(10.0,c1.getPrixHT(),0.1);
 		assertNotEquals(11.0,c1.getPrixHT(),0.1);
@@ -70,15 +70,15 @@ public class CommandeTest {
 
 	@Test
 	public void testGetConditionnement() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 		
 		assertEquals("cond1",c1.getConditionnement());
 		assertNotEquals("cond2",c1.getConditionnement());
@@ -88,15 +88,15 @@ public class CommandeTest {
 
 	@Test
 	public void testGetQte() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 		
 		assertEquals(10,c1.getQte());
 		assertNotEquals(20,c1.getQte());
@@ -106,15 +106,15 @@ public class CommandeTest {
 
 	@Test
 	public void testGetDateEnvoi() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 		
 		assertEquals(format.parse("01-01-2015"),c1.getDateEnvoi());
 		assertNotEquals(format.parse("02-01-2014"),c1.getDateEnvoi());
@@ -124,15 +124,15 @@ public class CommandeTest {
 
 	@Test
 	public void testGetDateConditionnement() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 		
 		assertEquals(format.parse("01-02-2015"),c1.getDateConditionnement());
 		assertNotEquals(format.parse("02-02-2014"),c1.getDateConditionnement());
@@ -142,15 +142,15 @@ public class CommandeTest {
 
 	@Test
 	public void testEnCours() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, null,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, null,dC2,"2");
 		
 		assertFalse(c1.EnCours());
 		assertTrue(c2.EnCours());
@@ -158,15 +158,15 @@ public class CommandeTest {
 
 	@Test
 	public void testXmlCommande() throws ParseException {
-		Produit p1 = new Produit("var1","type1",1);
-		Produit p2 = new Produit("var2","type2",2);
+		Produit p1 = new Produit("1","var1","type1",1);
+		Produit p2 = new Produit("2","var2","type2",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE1 = format.parse("01-01-2015");
 		Date dE2 = format.parse("02-01-2014");
 		Date dC1 = format.parse("01-02-2015");
 		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande(1, p1, 10.F, "cond1",10, dE1,dC1);
-		Commande c2 = new Commande(2, p2, 20.F, "cond2",20, dE2,dC2);
+		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
+		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
 		
 		String xml1 = "";
 		xml1 += "<commande id=\"1\">";
