@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.Test;
@@ -58,8 +59,37 @@ public class PersistanceSQLTest {
 			assertEquals(((Commande)objet3).getDateEnvoi(), ((Commande)objet4).getDateEnvoi());
 			assertEquals(((Commande)objet3).getDateConditionnement(), ((Commande)objet4).getDateConditionnement());
 			
+			Date dE2 = format.parse("02-02-2015");
 			
-		
+			Produit prodcom1 = new Produit("var1","fraiche entiere",10);
+			Produit prodcom2 = new Produit("var1","seche entiere",10);
+			Commande com1 = new Commande(1, prodcom1, 10.F, "cond1",10, dE,dC);
+			Commande com2 = new Commande(2, prodcom2, 20.F, "cond1",20, dE2,dC);
+			ArrayList<Commande> desCommandes = new ArrayList<Commande>();
+			desCommandes.add(com1);
+			desCommandes.add(com2);
+			
+			Object objet5 = new Distributeur("1","soc1",desCommandes);
+			Object objet6 = ps.ChargerDepuisBase("1", "Distributeur");
+			
+			assertEquals(objet5.getClass(),objet6.getClass());
+			assertNotEquals(objet5.getClass(),objet.getClass());
+			
+			assertEquals(((Distributeur)objet5).getId(),((Distributeur)objet6).getId());
+			assertEquals(((Distributeur)objet5).getNom(),((Distributeur)objet6).getNom());
+			
+			ArrayList<Commande> desCommandes2 = new ArrayList<Commande>();
+			desCommandes2 = ((Distributeur)objet6).getCommandes();
+			
+			assertEquals(desCommandes.size(),desCommandes2.size());
+			
+			Commande com3 = desCommandes2.get(0);
+			assertEquals(com1.getId(),com3.getId());
+			assertNotEquals(com2.getId(),com3.getId());
+			
+			Produit unProd = com3.getProduit();
+			assertEquals(prodcom1.getType(),unProd.getType());
+			assertNotEquals(prodcom2.getType(),unProd.getType());
 	}
 
 

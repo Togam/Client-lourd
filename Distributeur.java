@@ -16,9 +16,15 @@ public class Distributeur {
 	public String getId(){
 		return this.id;
 	}
+	
+	public String getNom(){
+		return this.nom;
+	}
+	
 	public ArrayList<Commande> getCommandes(){
 		return this.lesCommandes;
 	}
+	
 	public ArrayList<Commande> getCommandesEnCours(){
 		ArrayList<Commande> lesCommandesEnCours = new ArrayList<Commande>();
 		for (Commande tmp : lesCommandes){

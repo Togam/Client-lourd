@@ -6,6 +6,9 @@ import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class PersistanceSQL {
 	
@@ -230,12 +233,121 @@ public class PersistanceSQL {
 			   	     }
 	        		
 	        		
-	        		try
+	        		try //TRY GLOBAL
 		        	{
 			            Statement stmt = connexion.createStatement();
-			            String query = "SELECT P.NumProducteur, P.NomSociete"
-			            		+ "FROM producteur P";
+			            String query = "SELECT NumProducteur, NomSociete "
+			            		+ "FROM producteur "
+			            		+ "WHERE NumProducteur = \""+id+"\" ";
 			            ResultSet rs = stmt.executeQuery(query);
+			            
+			            String Num = "";
+			            String Nom = "";
+			            
+			            while(rs.next())
+			            {
+			            	Num = rs.getString("NumProducteur");
+			            	Nom = rs.getString("NomSociete");
+			            }
+			            
+			            Statement stmt6 = connexion.createStatement();
+			            ArrayList<Commande> commandes ;
+			            commandes = new ArrayList<Commande>();
+			            String query2 = "SELECT C.CodeCom "
+			            		+ "FROM commande C, verger V, producteur P, livraison L, lotproduction M "
+			            		+ "WHERE P.NumProducteur = \""+id+"\" "
+			            		+ "AND V.NumProducteur =  P.NumProducteur "
+			            		+ "AND L.CodeVerger = V.CodeVerger "
+			            		+ "AND L.CodeLiv = M.CodeLiv "
+			            		+ "AND M.NumLot = C.NumLot";
+			           ResultSet rs2 = stmt6.executeQuery(query2);
+			           
+			           ArrayList<String> codeCom = new ArrayList<String>();
+			           
+			           while(rs2.next()){
+			        	   codeCom.add(rs2.getString("CodeCom"));
+			           }
+			           
+			           for (String code : codeCom){
+			        	   // FOR POUR RECUPERER LES COMMANDES
+			        	   Produit LeProd = new Produit("0","0",0);
+			        	   Commande uneCommande = new Commande(0,LeProd,0.F,"",0,null,null);
+			        	   
+			        	   try
+				        	{
+				        		Statement stmt2 = connexion.createStatement();
+					            String query5 = "SELECT E.Libelle, D.Quantite, C.Date, E.Date, C.prixHT "
+					            		+ "FROM commande C, comporter D, conditionnement E "
+					            		+ "WHERE C.CodeCom = \""+code+"\" "
+					            		+ "AND C.CodeCom = D.NumCom "
+					            		+ "AND E.IdCond = D.IdCond";
+					            ResultSet rs3 = stmt2.executeQuery(query5);
+					            
+					            String conditionnement="";
+					            int qte = 0;
+					            Date dateE = null;
+					            Date dateC = null;
+					            float prix = 0;
+					            
+					            while(rs3.next())
+					            {
+					            	conditionnement = rs3.getString("E.Libelle");
+					            	qte = rs3.getInt("D.Quantite");
+					            	dateE = rs3.getDate("C.Date");
+					            	dateC = rs3.getDate("E.Date");
+					            	prix = rs3.getFloat("C.prixHT");
+					            }
+					            
+					            Statement stmt3 = connexion.createStatement();
+					            String query3 = "SELECT NumLot "
+					            		+ "FROM commande "
+					            		+ "WHERE CodeCom = \""+code+"\" ";
+					            ResultSet rs4 = stmt3.executeQuery(query3);
+					            
+					            int numProd = 0;
+					            while(rs4.next())
+					            {
+					            	numProd = rs4.getInt("NumLot");
+					            }
+					            id = Integer.toString(numProd);
+					            
+					            try
+					        	{
+					        
+					        		Statement stmt4 = connexion.createStatement();
+						            String query4 = "SELECT V.Libelle, L.Type, C.taille "
+						            		+ "FROM variete V, livraison L, lotproduction P, verger N, calibre C "
+						            		+ "WHERE P.NumLot = \""+numProd+"\" "
+						            		+ "AND P.CodeLiv = L.CodeLiv "
+						            		+ "AND P.Calibre = C.IdCalibre "
+						            		+ "AND L.CodeVerger = N.CodeVerger "
+						            		+ "AND N.LibelleVar = V.Libelle";
+						            ResultSet rs5 = stmt4.executeQuery(query4);
+						            
+						            String variete = "";
+						            String typeProduit = "";
+						            int calibre = 0;
+						            
+						            while(rs5.next())
+						            {
+						            	variete = rs5.getString("V.Libelle");
+						            	typeProduit = rs5.getString("L.Type");
+						            	calibre = rs5.getInt("C.taille");
+						            }
+						            	
+						            LeProd = new Produit(variete,typeProduit,calibre);
+						            
+						        }
+						        catch(SQLException e)
+						        {
+						            System.out.println("SQL error : " + e.getMessage());
+						        }
+					        	catch(java.lang.NullPointerException e){
+					        		System.out.println("NullPointerException error : " + e.getMessage());
+					        	} 
+					            
+	
+					           uneCommande = new Commande(Integer.parseInt(id), LeProd, prix, conditionnement, qte, dateE, dateC);  
 		        	}
 	        		 catch(SQLException e)
 			        {
@@ -244,25 +356,39 @@ public class PersistanceSQL {
 		        	catch(java.lang.NullPointerException e){
 		        		System.out.println("NullPointerException error : " + e.getMessage());
 		        	}
-			        finally
-			        {
-			            try
-			            {
-			            	if(connexion != null) {
-			       	            connexion.close();
-			        		}
-			            }
-			            catch(SQLException e)
-			            {
-			                System.out.println("SQL error cannot close bdd " + e.getMessage());
-			            }
-			            catch(java.lang.NullPointerException e)
-			            {
-			                System.out.println("SQL error cannot close bdd " + e.getMessage());
-			            }
-			               
-			        }
-	        		break;
+			        	   
+			        commandes.add(uneCommande);
+			     }  // FIN DU FOR POUR LES COMMANDES
+			           
+			           objet = new Distributeur(Num,Nom,commandes);
+			           
+		     }	//FIN DU TRY GLOBALE
+	        catch(SQLException e)
+		    {
+		        System.out.println("SQL error : " + e.getMessage());
+		    }
+		    catch(java.lang.NullPointerException e)
+		   {
+		    	System.out.println("SQL error : " + e.getMessage());
+		    }
+	        finally
+			  {
+			   try
+			    {
+			    if(connexion != null) {
+			       	  connexion.close();
+			     	}
+			    }
+			   catch(SQLException e)
+			   {
+			      System.out.println("SQL error cannot close bdd " + e.getMessage());
+			   }
+			  catch(java.lang.NullPointerException e)
+			  {
+			       System.out.println("SQL error cannot close bdd " + e.getMessage());
+			  }
+			}
+	        break;
 	        }	
 	        
 	    	
