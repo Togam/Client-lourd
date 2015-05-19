@@ -30,7 +30,8 @@ public class PersistanceSQL {
 	
 	   public void RangerDansBase(Object unObjet){
 		   
-		   if(unObjet.getClass().toString() == "Produit"){
+		   if(String.valueOf(unObjet.getClass()).equals("Produit")){
+			   String id = ((Produit)unObjet).getId();
 			   String variete = ((Produit)unObjet).getVariete();
 			   String type = ((Produit)unObjet).getType();
 			   int calibre = ((Produit)unObjet).getCalibre();
@@ -48,7 +49,62 @@ public class PersistanceSQL {
 			   
 			   try{
 				   Statement stmt1 = connexion.createStatement();
-				   String query1 = "INSERT INTO lotproduction ('variete', 'type', 'Calibre') VALUES ('"+variete+"', '"+type+"', '"+calibre+"')";
+				   String query1 = "INSERT INTO produit ('id','varieteProduit', 'typeProduit', 'calibreProduit') VALUES ('"+id+"', "+variete+"', '"+type+"', '"+calibre+"')";
+				   ResultSet rs1 = stmt1.executeQuery(query1);
+				   rs1.moveToInsertRow();
+				   rs1.insertRow();
+				   rs1.close();
+			   }
+			   catch(SQLException e)
+		        {
+		            System.out.println("SQL error : " + e.getMessage());
+		        }
+	        	catch(java.lang.NullPointerException e){
+	        		System.out.println("NullPointerException error : " + e.getMessage());
+	        	}
+			   finally {
+	        		try
+		            {
+	        			if(connexion != null) {
+	       	             connexion.close();
+	        			}
+		            }
+		            catch(SQLException e)
+		            {
+		                System.out.println("SQL error cannot close bdd " + e.getMessage());
+		            }
+		            catch(java.lang.NullPointerException e)
+		            {
+		                System.out.println("SQL error cannot close bdd " + e.getMessage());
+		            }
+	        	}
+		   }
+		   
+		   if(String.valueOf(unObjet.getClass()).equals("Commande")){
+			   String id = ((Commande)unObjet).getId();
+			   Produit LeProd = ((Commande)unObjet).getProduit();
+			   String idProd = LeProd.getId();
+			   double prixHT = ((Commande)unObjet).getPrixHT();
+			   String conditionnement = ((Commande)unObjet).getConditionnement();
+			   int qte = ((Commande)unObjet).getQte();
+			   Date envoi = (Date) ((Commande)unObjet).getDateEnvoi();
+			   Date cond = (Date) ((Commande)unObjet).getDateConditionnement();
+			   String distrib = ((Commande)unObjet).getIdDistributeur();
+			   
+			   try  {
+		        	Class.forName("org.gjt.mm.mysql.Driver");
+		   	    	connexion = DriverManager.getConnection("jdbc:mysql://" + ipBase + ":" +port + "/" + nomBaseDonne ,"root","");  	
+		   	     }
+		   	     catch(SQLException e) {
+		   	        System.out.println("SQL error : " + e.getMessage());
+		   	     }
+		   	     catch(ClassNotFoundException e){
+		   	        System.out.println("Class not found : " + e.getMessage());
+		   	     }
+			   try{
+				   Statement stmt1 = connexion.createStatement();
+				   String query1 = "INSERT INTO commande ('id','prixHT', 'conditionnement', 'quantite','dateConditionnement','dateEnvoi','idDistributeur','idProduit') "
+				   		+ "VALUES ('"+id+"', "+prixHT+"', '"+conditionnement+"', '"+qte+"', '"+cond+"', '"+envoi+"', '"+distrib+"', '"+idProd+"')";
 				   ResultSet rs1 = stmt1.executeQuery(query1);
 				   rs1.insertRow();
 			   }
@@ -59,34 +115,27 @@ public class PersistanceSQL {
 	        	catch(java.lang.NullPointerException e){
 	        		System.out.println("NullPointerException error : " + e.getMessage());
 	        	}
+			   finally {
+	        		try
+		            {
+	        			if(connexion != null) {
+	       	             connexion.close();
+	        			}
+		            }
+		            catch(SQLException e)
+		            {
+		                System.out.println("SQL error cannot close bdd " + e.getMessage());
+		            }
+		            catch(java.lang.NullPointerException e)
+		            {
+		                System.out.println("SQL error cannot close bdd " + e.getMessage());
+		            }
+	        	}
 		   }
 		   
-		   if(unObjet.getClass().toString() == "Commande"){
-			   String id = ((Commande)unObjet).getId();
-			   Produit LeProd = ((Commande)unObjet).getProduit();
-			   double prixHT = ((Commande)unObjet).getPrixHT();
-			   String conditionnement = ((Commande)unObjet).getConditionnement();
-			   int qte = ((Commande)unObjet).getQte();
-			   Date envoie = (Date) ((Commande)unObjet).getDateEnvoi();
-			   Date cond = (Date) ((Commande)unObjet).getDateConditionnement();
-			   
-			   try  {
-		        	Class.forName("org.gjt.mm.mysql.Driver");
-		   	    	connexion = DriverManager.getConnection("jdbc:mysql://" + ipBase + ":" +port + "/" + nomBaseDonne ,"root","");  	
-		   	     }
-		   	     catch(SQLException e) {
-		   	        System.out.println("SQL error : " + e.getMessage());
-		   	     }
-		   	     catch(ClassNotFoundException e){
-		   	        System.out.println("Class not found : " + e.getMessage());
-		   	     }
-		   }
-		   
-		   if(unObjet.getClass().toString() == "Distributeur"){
+		   if(String.valueOf(unObjet.getClass()).equals("Distributeur")){
 			   String id = ((Distributeur)unObjet).getId();
 			   String nom = ((Distributeur)unObjet).getNom();
-			   ArrayList<Commande> LesCommandes = new ArrayList<Commande>();
-			   LesCommandes = ((Distributeur)unObjet).getCommandes();
 			   
 			   try  {
 		        	Class.forName("org.gjt.mm.mysql.Driver");
@@ -98,6 +147,36 @@ public class PersistanceSQL {
 		   	     catch(ClassNotFoundException e){
 		   	        System.out.println("Class not found : " + e.getMessage());
 		   	     }
+			   try{
+				   Statement stmt1 = connexion.createStatement();
+				   String query1 = "INSERT INTO distributeur ('id','nomDistributeur') "
+				   		+ "VALUES ('"+id+"', "+nom+"')";
+				   ResultSet rs1 = stmt1.executeQuery(query1);
+				   rs1.insertRow();
+			   }
+			   catch(SQLException e)
+		        {
+		            System.out.println("SQL error : " + e.getMessage());
+		        }
+	        	catch(java.lang.NullPointerException e){
+	        		System.out.println("NullPointerException error : " + e.getMessage());
+	        	}
+			   finally {
+	        		try
+		            {
+	        			if(connexion != null) {
+	       	             connexion.close();
+	        			}
+		            }
+		            catch(SQLException e)
+		            {
+		                System.out.println("SQL error cannot close bdd " + e.getMessage());
+		            }
+		            catch(java.lang.NullPointerException e)
+		            {
+		                System.out.println("SQL error cannot close bdd " + e.getMessage());
+		            }
+	        	}
 		   }
 
 	    }

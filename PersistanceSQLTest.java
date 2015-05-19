@@ -18,9 +18,11 @@ public class PersistanceSQLTest {
 
 	@Test
 	public void testRangerDansBase() {
-		
-		
+		PersistanceSQL ps = new PersistanceSQL("localhost", 3306,"gestcommande");	
+		Produit test1 = new Produit("4","Grenoble","Seche Entière",3);
+		ps.RangerDansBase(test1);
 	}
+	
 
 	@Test
 	public void testChargerDepuisBase() throws ParseException, SQLException {

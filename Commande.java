@@ -46,6 +46,9 @@ public class Commande {
 	public Date getDateConditionnement(){
 		return this.dateConditionnement;
 	}
+	public String getIdDistributeur(){
+		return this.idDistributeur;
+	}
 	
 	public boolean EnCours(){
 		boolean rep = true;

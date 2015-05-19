@@ -17,17 +17,17 @@ public class GestionCommandes {
     
     public String XmlNonLivrees(Distributeur unDistri){
     	ArrayList<Commande> liste = unDistri.getCommandesEnCours();
-    	String res="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    	String res="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     	// Retourne une chaîne de caractères qui représente le document XML de la liste des commandes 
     	// non livrées du distributeur passé en paramètre comme le montre l'exemple de l'annexe. 
     	res = res + "<commandes idDistributeur=\"";
     	res = res + unDistri.getId();
     	res = res +"\" xmlns:xlink=\"";
-    	res = res + unDistri.getNom()+"\">\n";
+    	res = res + unDistri.getNom()+"\">";
     	for(Commande uneCommande : liste){
     		res = res + uneCommande.XmlCommande();
     	}
-    	res = res + "</commandes>";
+    	
     	return res;
     }
         
