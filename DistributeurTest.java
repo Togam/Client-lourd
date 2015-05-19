@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,74 +18,95 @@ public class DistributeurTest {
 
 	@Test
 	public void testGetId() throws ParseException {
-		Produit p1 = new Produit("1","var1","type1",1);
-		Produit p2 = new Produit("2","var2","type2",2);
+		Produit p1 = new Produit("1","Mayette","Fraiche Entière",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		Date dE1 = format.parse("01-01-2015");
-		Date dE2 = format.parse("02-01-2014");
-		Date dC1 = format.parse("01-02-2015");
-		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
-		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
+		Date dE2 = format.parse("14-10-2014");
+		Date dC1 = format.parse("12-05-2015");
+		Date dC2 = format.parse("12-10-2014");
+		Commande c1 = new Commande("00213", p1, 266, "filet 1kg",50, null,dC1,"carr15432");
+		Commande c2 = new Commande("00214", p1, 398, "filet 1kg",100, dE2,dC2,"carr15432");
 		
 		ArrayList<Commande> lesCommandes = new ArrayList<Commande>();
 		lesCommandes.add(c1);
 		lesCommandes.add(c2);
 		
-		Distributeur Dist1 = new Distributeur("01","dist1");
+		Distributeur Dist1 = new Distributeur("01","dist1",lesCommandes);
 		
 		assertEquals("01",Dist1.getId());
 		assertNotEquals("02",Dist1.getId());
 	}
 
 	@Test
-	public void testGetCommandes() throws ParseException {
-		Produit p1 = new Produit("1","var1","type1",1);
-		Produit p2 = new Produit("2","var2","type2",2);
+	public void testGetCommandes() throws ParseException, SQLException {
+		PersistanceSQL ps = new PersistanceSQL("localhost", 3306,"gestcommande");
+		
+		Produit p1 = new Produit("1","Mayette","Fraiche Entière",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		Date dE1 = format.parse("01-01-2015");
-		Date dE2 = format.parse("02-01-2014");
-		Date dC1 = format.parse("01-02-2015");
-		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
-		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
+		Date dE2 = format.parse("14-10-2014");
+		Date dC1 = format.parse("12-05-2015");
+		Date dC2 = format.parse("12-10-2014");
+		Date dC3 = format.parse("08-05-2014");
+		Commande c1 = new Commande("00213", p1, 266, "filet 1kg",50, null,dC1,"carr15432");
+		Commande c2 = new Commande("00214", p1, 398, "filet 1kg",100, dE2,dC2,"carr15432");
+		Commande c3 = new Commande("00215", p1, 2660, "filet 5kg",100, null,dC2,"carr15432");
 		
 		ArrayList<Commande> lesCommandes = new ArrayList<Commande>();
 		lesCommandes.add(c1);
 		lesCommandes.add(c2);
+		lesCommandes.add(c3);
 		
-		Distributeur Dist1 = new Distributeur("01","dist1");
+		Object dist1 = new Distributeur("carr15432","carreclerc",lesCommandes);
+		Object dist2 = ps.ChargerDepuisBase("carr15432", "Distributeur");
+		ArrayList<Commande> lesCommandes2 = new ArrayList<Commande>();
+		lesCommandes2 = ((Distributeur)dist2).getCommandes();
 		
-		//assertEquals(lesCommandes, Dist1.getCommandes());
+		assertEquals(lesCommandes.size(),lesCommandes2.size());
+		Commande com1 = lesCommandes2.get(0);
+		assertEquals(c1.getId(),com1.getId());
+		assertNotEquals(c2.getId(),com1.getId());
+		
+		Produit prod1 = com1.getProduit();
+		assertEquals(p1.getId(),prod1.getId());
 	}
 
 	@Test
-	public void testGetCommandesEnCours() throws ParseException {
-		Produit p1 = new Produit("1","var1","type1",1);
-		Produit p2 = new Produit("2","var2","type2",2);
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		Date dE1 = format.parse("01-01-2015");
-		Date dE2 = format.parse("02-01-2014");
-		Date dC1 = format.parse("01-02-2015");
-		Date dC2 = format.parse("02-02-2014");
-		Commande c1 = new Commande("1", p1, 10, "cond1",10, dE1,dC1,"1");
-		Commande c2 = new Commande("2", p2, 20, "cond2",20, dE2,dC2,"2");
-		
-		ArrayList<Commande> lesCommandes = new ArrayList<Commande>();
-		lesCommandes.add(c1);
-		lesCommandes.add(c2);
-		
-		ArrayList<Commande> lesCommandesEnCours = new ArrayList<Commande>();
-		lesCommandesEnCours.add(c2);
+	public void testGetCommandesEnCours() throws ParseException, SQLException {
+			PersistanceSQL ps = new PersistanceSQL("localhost", 3306,"gestcommande");
+			
+			Produit p1 = new Produit("1","Mayette","Fraiche Entière",2);
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			Date dE2 = format.parse("14-10-2014");
+			Date dC1 = format.parse("12-05-2015");
+			Date dC2 = format.parse("12-10-2014");
+			Date dC3 = format.parse("08-05-2014");
+			Commande c1 = new Commande("00213", p1, 266, "filet 1kg",50, null,dC1,"carr15432");
+			Commande c2 = new Commande("00214", p1, 398, "filet 1kg",100, dE2,dC2,"carr15432");
+			Commande c3 = new Commande("00215", p1, 2660, "filet 5kg",100, null,dC2,"carr15432");
+			
+			ArrayList<Commande> lesCommandes = new ArrayList<Commande>();
+			lesCommandes.add(c1);
+			lesCommandes.add(c2);
+			lesCommandes.add(c3);
+			
+			Object dist1 = new Distributeur("carr15432","carreclerc",lesCommandes);
+			Object dist2 = ps.ChargerDepuisBase("carr15432", "Distributeur");
+			ArrayList<Commande> lesCommandes2EnCours = new ArrayList<Commande>();
+			lesCommandes2EnCours = ((Distributeur)dist2).getCommandesEnCours();
 		
 		ArrayList<Commande> lesCommandesEnvoyees = new ArrayList<Commande>();
-		lesCommandesEnvoyees.add(c1);
+		lesCommandesEnvoyees.add(c2);
 		
-		Distributeur Dist1 = new Distributeur("01","dist1");
+		ArrayList<Commande> lesCommandesEnCours = new ArrayList<Commande>();
+		lesCommandesEnCours.add(c1);
+		lesCommandesEnCours.add(c3);
 		
-		//assertEquals(lesCommandesEnCours, Dist1.getCommandesEnCours());
-		assertNotEquals(lesCommandesEnvoyees, Dist1.getCommandesEnCours());
+		assertEquals(lesCommandesEnCours.size(),lesCommandes2EnCours.size());
+		assertNotEquals(lesCommandesEnvoyees.size(), lesCommandes2EnCours.size());
 		
+		Commande com1 = lesCommandes2EnCours.get(0);
+		Commande com2 = lesCommandes2EnCours.get(1);
+		assertEquals(c1.getId(),com1.getId());
+		assertNotEquals(c2.getId(),com2.getId());
 	}
 
 }

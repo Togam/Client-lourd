@@ -11,6 +11,10 @@ public class Produit {
 		this.calibre = unCalibre;
 	}
 	
+	public String getId(){
+		return this.id;
+	}
+	
 	public String getVariete(){
 		return this.variete;
 	}

@@ -13,41 +13,10 @@ public class Distributeur {
 	private ArrayList<Commande> lesCommandes;
 	private Connection connexion ;
 	
-	public Distributeur(String unId , String unNom){
+	public Distributeur(String unId , String unNom, ArrayList<Commande> commandes){
         this.id = unId;
-        this.nom = unNom ;
-        this.lesCommandes = new ArrayList<Commande>();
-        PersistanceSQL ps = new PersistanceSQL();
-        
-        try  {
-        	Class.forName("org.gjt.mm.mysql.Driver");
-   	    	connexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/gestcommande" ,"root","");  	
-   	     }
-   	     catch(SQLException e) {
-   	        System.out.println("SQL error : " + e.getMessage());
-   	     }
-   	     catch(ClassNotFoundException e){
-   	        System.out.println("Class not found : " + e.getMessage());
-   	     }
-        	try{
-            Statement stmt = connexion.createStatement();
-            ResultSet result ;
-            String query = "SELECT id FROM Commande Where idDistributeur=\""+ unId +"\"";
-            PreparedStatement req = connexion.prepareStatement(query);
-            result = req.executeQuery(query);
-            while(result.next())
-            { 
-             String idCommande = result.getString("id");
-             Commande C = (Commande) ps.ChargerDepuisBase(idCommande, "Commande");
-             lesCommandes.add(C);
-            }
-        }
-        catch(SQLException e)
-        {
-            System.out.println("SQL error : " + e.getMessage());
-        }
-    
-               
+        this.nom = unNom;
+        this.lesCommandes = commandes;     
         }
 	
 	public String getId(){
