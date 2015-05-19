@@ -67,9 +67,11 @@ public class PersistanceSQLTest {
 			Produit p1 = new Produit("1","Mayette","Fraiche Entière",2);
 			Commande c1 = new Commande("00213", p1, 266, "filet 1kg",50, null,dC1,"carr15432");
 			Commande c2 = new Commande("00214", p1, 398, "filet 1kg",100, dE2,dC2,"carr15432");
+			Commande c3 = new Commande("00215", p1, 2660, "filet 5kg",100, null,dC2,"carr15432");
 			ArrayList<Commande> desCommandes = new ArrayList<Commande>();
 			desCommandes.add(c1);
 			desCommandes.add(c2);
+			desCommandes.add(c3);
 			
 			Distributeur objet5 = new Distributeur("carr15432","carreclerc",desCommandes);
 			Object objet6 = ps.ChargerDepuisBase("carr15432", "Distributeur");
@@ -77,7 +79,7 @@ public class PersistanceSQLTest {
 			assertEquals(objet5.getClass(),objet6.getClass());
 			assertNotEquals(objet5.getClass(),objet.getClass());
 			
-			/*assertEquals(((Distributeur)objet5).getId(),((Distributeur)objet6).getId());
+			assertEquals(((Distributeur)objet5).getId(),((Distributeur)objet6).getId());
 			assertEquals(((Distributeur)objet5).getNom(),((Distributeur)objet6).getNom());
 			
 			ArrayList<Commande> desCommandes2 = new ArrayList<Commande>();
@@ -85,13 +87,13 @@ public class PersistanceSQLTest {
 			
 			assertEquals(desCommandes.size(),desCommandes2.size());
 			
-			Commande com3 = desCommandes2.get(0);
-			assertEquals(com1.getId(),com3.getId());
-			assertNotEquals(com2.getId(),com3.getId());
+			Commande com1 = desCommandes2.get(0);
+			assertEquals(c1.getId(),com1.getId());
+			assertNotEquals(c2.getId(),com1.getId());
 			
-			Produit unProd = com3.getProduit();
-			assertEquals(prodcom1.getType(),unProd.getType());
-			assertNotEquals(prodcom2.getType(),unProd.getType());*/
+
+			Produit unProd = com1.getProduit();
+			assertEquals(p1.getType(),unProd.getType());
 	}
 
 

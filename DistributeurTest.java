@@ -17,23 +17,28 @@ public class DistributeurTest {
 	}
 
 	@Test
-	public void testGetId() throws ParseException {
+	public void testGetId() throws ParseException, SQLException {
+		PersistanceSQL ps = new PersistanceSQL("localhost", 3306,"gestcommande");
+		
 		Produit p1 = new Produit("1","Mayette","Fraiche Entière",2);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date dE2 = format.parse("14-10-2014");
 		Date dC1 = format.parse("12-05-2015");
 		Date dC2 = format.parse("12-10-2014");
+		Date dC3 = format.parse("08-05-2014");
 		Commande c1 = new Commande("00213", p1, 266, "filet 1kg",50, null,dC1,"carr15432");
 		Commande c2 = new Commande("00214", p1, 398, "filet 1kg",100, dE2,dC2,"carr15432");
+		Commande c3 = new Commande("00215", p1, 2660, "filet 5kg",100, null,dC2,"carr15432");
 		
 		ArrayList<Commande> lesCommandes = new ArrayList<Commande>();
 		lesCommandes.add(c1);
 		lesCommandes.add(c2);
+		lesCommandes.add(c3);
 		
-		Distributeur Dist1 = new Distributeur("01","dist1",lesCommandes);
+		Object dist1 = new Distributeur("carr15432","carreclerc",lesCommandes);
+		Object dist2 = ps.ChargerDepuisBase("carr15432", "Distributeur");
 		
-		assertEquals("01",Dist1.getId());
-		assertNotEquals("02",Dist1.getId());
+		assertEquals(((Distributeur)dist1).getId(),((Distributeur)dist2).getId());
 	}
 
 	@Test
